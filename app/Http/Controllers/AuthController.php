@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    // Registration method
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -31,4 +32,47 @@ class AuthController extends Controller
             'user'    => $user,
         ], 201);
     }
+
+    // Login method
+    public function login(Request $request)
+{
+    $validated = $request->validate([
+        'email'    => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (!Auth::attempt($validated)) {
+        return response()->json([
+            'message' => 'Invalid credentials'
+        ], 401);
+    }
+
+    if ($request->hasSession()) {
+        $request->session()->regenerate();
+    }
+
+    return response()->json([
+        'message' => 'Login successful',
+        'user'    => Auth::user(),
+    ]);
+}
+
+// Logout method
+public function logout(Request $request)
+{
+    Auth::logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return response()->json([
+        'message' => 'Logged out successfully'
+    ]);
+}
+
+// Get authenticated user details
+public function me()
+{
+    return response()->json(Auth::user());
+}
 }

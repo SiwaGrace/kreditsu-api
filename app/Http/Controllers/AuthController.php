@@ -26,10 +26,16 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        // for token test
+        if ($request->hasSession()) {
+        $request->session()->regenerate();
+    }
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Registration successful',
-            'user'    => $user,
+            'user'    => $user->only('id', 'name', 'email'),
+            'token'   => $token,
         ], 201);
     }
 
@@ -41,29 +47,44 @@ class AuthController extends Controller
         'password' => ['required'],
     ]);
 
+    
     if (!Auth::attempt($validated)) {
         return response()->json([
             'message' => 'Invalid credentials'
-        ], 401);
-    }
+            ], 401);
+            }
 
     if ($request->hasSession()) {
         $request->session()->regenerate();
     }
 
+            $token = Auth::user()->createToken('auth-token')->plainTextToken;
+
+
     return response()->json([
         'message' => 'Login successful',
-        'user'    => Auth::user(),
+        'token'   => $token,
+        'user'    => Auth::user()->only('id', 'name', 'email'),
     ]);
 }
 
 // Logout method
 public function logout(Request $request)
 {
+    $token = $request->user()->currentAccessToken();
+
+    // only delete if it's a real token (Bearer), not a session (TransientToken)
+    if ($token instanceof \Laravel\Sanctum\PersonalAccessToken) {
+        $token->delete();
+    }
+
     Auth::guard('web')->logout();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+    // keep
+    if ($request->hasSession()) {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+    }
 
     return response()->json([
         'message' => 'Logged out successfully'
@@ -71,8 +92,10 @@ public function logout(Request $request)
 }
 
 // Get authenticated user details
-public function me()
-{
-    return response()->json(Auth::user());
-}
+public function me(Request $request)
+    {
+        return response()->json(
+            $request->user()->only('id', 'name', 'email')  // ← $request->user() not Auth::user()
+        );
+    }
 }

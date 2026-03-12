@@ -40,6 +40,16 @@ class Business extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
     // ─── Slug generation ───────────────────────────────────────────
 
     public static function generateSlug(string $name): string

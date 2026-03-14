@@ -7,8 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controller for managing business expenses.
+ *
+ * This controller handles CRUD operations for expenses, ensuring that users can only
+ * access and modify expenses belonging to their own business. It provides endpoints
+ * for listing, creating, viewing, updating, and deleting expenses.
+ */
 class ExpenseController extends Controller
 {
+    /**
+     * Get all expenses for the authenticated user's business.
+     */
     public function index()
     {
         $business = Auth::user()?->business;
@@ -27,6 +37,9 @@ class ExpenseController extends Controller
         ]);
     }
 
+    /**
+     * Create a new expense for the authenticated user's business.
+     */
     public function store(Request $request)
     {
         $business = Auth::user()?->business;
@@ -52,6 +65,9 @@ class ExpenseController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Get a specific expense by ID.
+     */
     public function show(Expense $expense)
     {
         $this->authorizeExpense($expense);
@@ -62,6 +78,9 @@ class ExpenseController extends Controller
         ]);
     }
 
+    /**
+     * Update an existing expense.
+     */
     public function update(Request $request, Expense $expense)
     {
         $this->authorizeExpense($expense);
@@ -81,6 +100,9 @@ class ExpenseController extends Controller
         ]);
     }
 
+    /**
+     * Delete an expense.
+     */
     public function destroy(Expense $expense)
     {
         $this->authorizeExpense($expense);
@@ -92,6 +114,9 @@ class ExpenseController extends Controller
         ]);
     }
 
+    /**
+     * Authorize that the expense belongs to the authenticated user's business.
+     */
     protected function authorizeExpense(Expense $expense): void
     {
         $business = Auth::user()?->business;

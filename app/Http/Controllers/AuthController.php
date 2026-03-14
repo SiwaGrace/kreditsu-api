@@ -8,9 +8,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controller for handling user authentication and account management.
+ *
+ * This controller provides endpoints for user registration, login, logout, and profile
+ * management. It uses Laravel Sanctum for API token authentication and supports both
+ * session-based and token-based authentication flows.
+ */
 class AuthController extends Controller
 {
-    // Registration method
+    /**
+     * Register a new user account.
+     */
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -39,7 +48,9 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // Login method
+    /**
+     * Authenticate a user and return an access token.
+     */
     public function login(Request $request)
 {
     $validated = $request->validate([
@@ -69,6 +80,9 @@ class AuthController extends Controller
 }
 
 // Logout method
+/**
+ * Logout the authenticated user and revoke their access token.
+ */
 public function logout(Request $request)
 {
     $token = $request->user()->currentAccessToken();
@@ -92,6 +106,9 @@ public function logout(Request $request)
 }
 
 // Get authenticated user details
+/**
+ * Get the details of the authenticated user.
+ */
 public function me(Request $request)
     {
         return response()->json(
@@ -100,6 +117,9 @@ public function me(Request $request)
     }
 
     // Update authenticated user
+/**
+ * Update the authenticated user's profile information.
+ */
     public function update(Request $request)
     {
         $user = $request->user();
@@ -125,6 +145,9 @@ public function me(Request $request)
     }
 
     // Delete authenticated user
+/**
+ * Delete the authenticated user's account and all associated data.
+ */
     public function delete(Request $request)
     {
         $user = $request->user();

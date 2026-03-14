@@ -6,9 +6,18 @@ use App\Models\Business;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controller for managing business profiles and public directory.
+ *
+ * This controller handles business creation, updates, and retrieval for authenticated users.
+ * It also provides public endpoints for viewing published business profiles and browsing
+ * the business directory. Includes financial summary calculations for business owners.
+ */
 class BusinessController extends Controller
 {
-    // ─── Get authenticated user's business ────────────────────────
+    /**
+     * Get the authenticated user's business with financial summary.
+     */
     public function show()
     {
         $business = Auth::user()->business;
@@ -26,7 +35,9 @@ class BusinessController extends Controller
         'net'            => $totalSales - $totalExpenses,]);
     }
 
-    // ─── Create business ──────────────────────────────────────────
+    /**
+     * Create a new business for the authenticated user.
+     */
     public function store(Request $request)
     {
         // prevent creating a second business
@@ -58,7 +69,9 @@ class BusinessController extends Controller
         ], 201);
     }
 
-    // ─── Update business ──────────────────────────────────────────
+    /**
+     * Update the authenticated user's business.
+     */
     public function update(Request $request)
     {
         $business = Auth::user()->business;
@@ -93,7 +106,9 @@ class BusinessController extends Controller
         ]);
     }
 
-    // ─── Public profile (no auth required) ────────────────────────
+    /**
+     * Get a public business profile by slug (no authentication required).
+     */
     public function profile(string $slug)
     {
         $business = Business::where('slug', $slug)
@@ -110,7 +125,9 @@ class BusinessController extends Controller
         ]);
     }
 
-    // ─── Directory of all businesses (no auth required) ─────────────────────────────
+    /**
+     * Get a paginated list of all published businesses (no authentication required).
+     */
     public function index()
     {
         $businesses = Business::where('is_published', true)

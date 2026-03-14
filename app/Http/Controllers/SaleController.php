@@ -7,8 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controller for managing business sales.
+ *
+ * This controller handles CRUD operations for sales records, ensuring that users can only
+ * access and modify sales belonging to their own business. It provides endpoints
+ * for listing, creating, viewing, updating, and deleting sales.
+ */
 class SaleController extends Controller
 {
+    /**
+     * Get all sales for the authenticated user's business.
+     */
     public function index()
     {
         $business = Auth::user()?->business;
@@ -27,6 +37,9 @@ class SaleController extends Controller
         ]);
     }
 
+    /**
+     * Create a new sale for the authenticated user's business.
+     */
     public function store(Request $request)
     {
         $business = Auth::user()?->business;
@@ -49,6 +62,9 @@ class SaleController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Get a specific sale by ID.
+     */
     public function show(Sale $sale)
     {
         $this->authorizeSale($sale);
@@ -59,6 +75,9 @@ class SaleController extends Controller
         ]);
     }
 
+    /**
+     * Update an existing sale.
+     */
     public function update(Request $request, Sale $sale)
     {
         $this->authorizeSale($sale);
@@ -77,6 +96,9 @@ class SaleController extends Controller
         ]);
     }
 
+    /**
+     * Delete a sale.
+     */
     public function destroy(Sale $sale)
     {
         $this->authorizeSale($sale);
@@ -88,6 +110,9 @@ class SaleController extends Controller
         ]);
     }
 
+    /**
+     * Authorize that the sale belongs to the authenticated user's business.
+     */
     protected function authorizeSale(Sale $sale): void
     {
         $business = Auth::user()?->business;

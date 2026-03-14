@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'me']);
     Route::patch('/user', [AuthController::class, 'update']);
+    Route::delete('/user', [AuthController::class, 'delete']);
 
 // ─── Business routes (auth required) ─────────────────────────────
     Route::get('/business', [BusinessController::class, 'show']);

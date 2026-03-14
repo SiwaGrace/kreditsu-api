@@ -123,4 +123,20 @@ public function me(Request $request)
             'user'    => $user->only('id', 'name', 'email'),
         ]);
     }
+
+    // Delete authenticated user
+    public function delete(Request $request)
+    {
+        $user = $request->user();
+
+        // Delete all tokens
+        $user->tokens()->delete();
+
+        // Delete the user
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
+    }
 }

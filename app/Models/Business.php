@@ -65,4 +65,18 @@ class Business extends Model
 
         return $slug;
     }
+
+    //  transaction activity
+public function isActiveTrader(): bool
+{
+    $recentSale = $this->sales()
+        ->where('date', '>=', now()->subDays(30))
+        ->exists();
+
+    $recentExpense = $this->expenses()
+        ->where('date', '>=', now()->subDays(30))
+        ->exists();
+
+    return $recentSale || $recentExpense;
+}
 }

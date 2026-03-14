@@ -17,7 +17,13 @@ class BusinessController extends Controller
             return response()->json(['message' => 'No business found'], 404);
         }
 
-        return response()->json(['business' => $business]);
+        $totalSales    = $business->sales()->sum('amount');
+    $totalExpenses = $business->expenses()->sum('amount');
+
+        return response()->json([
+            'business' => $business,'total_sales'    => $totalSales,
+        'total_expenses' => $totalExpenses,
+        'net'            => $totalSales - $totalExpenses,]);
     }
 
     // ─── Create business ──────────────────────────────────────────
@@ -98,7 +104,10 @@ class BusinessController extends Controller
             return response()->json(['message' => 'Business not found'], 404);
         }
 
-        return response()->json($business);
+        return response()->json([
+            'business' => $business,
+        'is_active_trader'  => $business->isActiveTrader()
+        ]);
     }
 
     // ─── Directory of all businesses (no auth required) ─────────────────────────────

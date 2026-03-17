@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\BusinessDocumentController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -33,6 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/expenses/{expense}', [ExpenseController::class, 'show']);
     Route::patch('/expenses/{expense}', [ExpenseController::class, 'update']);
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy']);
+
+    // Business documents routes (auth required)
+    Route::get('/business-documents', [BusinessDocumentController::class, 'index']);
+    Route::post('/business-documents', [BusinessDocumentController::class, 'store']);
+    Route::get('/business-documents/{businessDocument}', [BusinessDocumentController::class, 'show']);
+    Route::patch('/business-documents/{businessDocument}', [BusinessDocumentController::class, 'update']);
+    Route::delete('/business-documents/{businessDocument}', [BusinessDocumentController::class, 'destroy']);
 });
 
 // ─── Public routes (no auth required) ─────────────────────────────

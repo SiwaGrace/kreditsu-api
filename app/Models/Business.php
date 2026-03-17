@@ -55,6 +55,11 @@ class Business extends Model
         return $this->hasMany(BusinessDocument::class);
     }
 
+    public function businessSnapshots()
+    {
+        return $this->hasMany(BusinessSnapshots::class);
+    }
+
     // ─── Slug generation ───────────────────────────────────────────
 
     public static function generateSlug(string $name): string

@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\BusinessDocumentController;
+use App\Http\Controllers\BusinessSnapshotsController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -41,6 +42,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/business-documents/{businessDocument}', [BusinessDocumentController::class, 'show']);
     Route::patch('/business-documents/{businessDocument}', [BusinessDocumentController::class, 'update']);
     Route::delete('/business-documents/{businessDocument}', [BusinessDocumentController::class, 'destroy']);
+
+    // Business snapshots routes (auth required)
+    Route::get('/business-snapshots', [BusinessSnapshotsController::class, 'index']);
+    Route::get('/business-snapshots/{month}', [BusinessSnapshotsController::class, 'show'])
+        ->where('month', '\d{4}-\d{2}');
+    Route::post('/business-snapshots/generate', [BusinessSnapshotsController::class, 'generate']);
 });
 
 // ─── Public routes (no auth required) ─────────────────────────────

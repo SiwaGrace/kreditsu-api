@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\BusinessDocumentController;
+use App\Http\Controllers\ScoreController;
 use App\Http\Controllers\BusinessSnapshotsController;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -16,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
     Route::patch('/user', [AuthController::class, 'update']);
     Route::delete('/user', [AuthController::class, 'delete']);
+    Route::get('/score', [ScoreController::class, 'show']);
 
 // ─── Business routes (auth required) ─────────────────────────────
     Route::get('/business', [BusinessController::class, 'show']);

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Sale;
+use App\Models\Expense;
+use App\Observers\SaleObserver;
+use App\Observers\ExpenseObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Sale::observe(SaleObserver::class);
+        Expense::observe(ExpenseObserver::class);
     }
 }

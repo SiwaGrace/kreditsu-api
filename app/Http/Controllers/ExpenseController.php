@@ -96,7 +96,7 @@ class ExpenseController extends Controller
 
         return response()->json([
             'message' => 'Expense updated successfully',
-            'expense' => $expense,
+            'expense' => $expense->fresh(),
         ]);
     }
 

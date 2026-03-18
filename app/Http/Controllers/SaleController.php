@@ -92,7 +92,7 @@ class SaleController extends Controller
 
         return response()->json([
             'message' => 'Sale updated successfully',
-            'sale' => $sale,
+            'sale' => $sale->fresh(),
         ]);
     }
 

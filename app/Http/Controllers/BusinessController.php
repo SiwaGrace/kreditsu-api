@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Services\ScoreCalculator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Auth;
  */
 class BusinessController extends Controller
 {
+    public function __construct(protected ScoreCalculator $calculator)
+    {
+    }
+
     /**
      * Get the authenticated user's business with financial summary.
      */
@@ -27,12 +32,17 @@ class BusinessController extends Controller
         }
 
         $totalSales    = $business->sales()->sum('amount');
-    $totalExpenses = $business->expenses()->sum('amount');
+        $totalExpenses = $business->expenses()->sum('amount');
+
+        $business->kreditsu_score = $this->calculator->calculate($business);
+        $business->save();
 
         return response()->json([
-            'business' => $business,'total_sales'    => $totalSales,
-        'total_expenses' => $totalExpenses,
-        'net'            => $totalSales - $totalExpenses,]);
+            'business'        => $business,
+            'total_sales'     => $totalSales,
+            'total_expenses'  => $totalExpenses,
+            'net'             => $totalSales - $totalExpenses,
+        ]);
     }
 
     /**
@@ -119,9 +129,12 @@ class BusinessController extends Controller
             return response()->json(['message' => 'Business not found'], 404);
         }
 
+        $business->kreditsu_score = $this->calculator->calculate($business);
+        $business->save();
+
         return response()->json([
             'business' => $business,
-        'is_active_trader'  => $business->isActiveTrader()
+            'is_active_trader' => $business->isActiveTrader(),
         ]);
     }
 

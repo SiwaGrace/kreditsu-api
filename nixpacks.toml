@@ -1,0 +1,33 @@
+[phases.setup]
+nixPkgs = [
+    "php82",
+    "php82Extensions.pdo",
+    "php82Extensions.pdo_mysql",
+    "php82Extensions.mbstring",
+    "php82Extensions.xml",
+    "php82Extensions.curl",
+    "php82Extensions.zip",
+    "composer"
+]
+
+[start]
+cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+```
+
+---
+
+**What does each part mean:**
+```
+php82                    → install PHP 8.2
+php82Extensions.pdo      → lets PHP talk to databases
+php82Extensions.pdo_mysql → specifically MySQL
+php82Extensions.mbstring  → handles text/strings
+php82Extensions.xml       → handles XML
+php82Extensions.curl      → handles HTTP requests
+php82Extensions.zip       → handles zip files
+composer                  → installs your Laravel dependencies
+
+php artisan migrate --force  → runs your migrations automatically on deploy
+php artisan serve            → starts the Laravel server
+--host=0.0.0.0               → makes it accessible from outside (Railway needs this)
+--port=$PORT                 → Railway tells your app which port to use
